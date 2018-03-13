@@ -12,11 +12,18 @@ matching criteria: `startTime<= transactionTime <=endTime`
 
 
 # Output
-{ "time":Unix Time, 
+{ 
+
+  "time":Unix Time, 
+
   "outValues":[output btc value], 
+  
   "recievers":[reciever address], 
+  
   "senders":[sender address], 
+  
   "inValues":[input btc value]
+  
 }
 ```json
 {"time": 1488703979, "outValues": [377000], "recievers": ["19u2VR715Xnwq9K9r29fd2oaGm4quzKrLR"], "senders": ["1BoatSLRHtKNngkdXEeobR76b53LETtpyT"], "inValues": [500000]}
