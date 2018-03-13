@@ -3,8 +3,8 @@
 
 ```python
 address: string "1BoatSLRHtKNngkdXEeobR76b53LETtpyT"
-startTime: datetime "03/04/2017"
-endTime: datetime "03/05/2017"
+startTime: datetime
+endTime: datetime 
 ```
 
 
