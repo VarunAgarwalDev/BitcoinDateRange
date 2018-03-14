@@ -71,6 +71,8 @@ def processTransactions(allRawTrans, startTime, endTime):
 
 			time = trans['time']
 			transtime = datetime.fromtimestamp(time)
+
+			txHash = trans['hash']
 			if(startTime<=transtime<=endTime):
 				transaction = {}
 				transaction['senders'] = senders
@@ -78,20 +80,34 @@ def processTransactions(allRawTrans, startTime, endTime):
 				transaction['recievers'] = recievers
 				transaction['outValues'] = outValues
 				transaction['time'] = time
+				transaction['id'] = txHash
 				cleanedtrans.append(transaction)
 	return cleanedtrans
 
 
-def transactionsByDate(address, firstDate, lastDate):
+def transactionsByDate(address, firstDate, lastDate, uniqueTrasnactions):
 	allRawTrans = getAllTransactions(address, firstDate, lastDate)
 	cleanedTrans = processTransactions(allRawTrans, firstDate, lastDate)
-
-	print "Found: " + str(len(cleanedTrans))
+	uniqueTrans = []
+	
 	for transaction in cleanedTrans:
-		print json.dumps(transaction)
+		if transaction['id'] not in uniqueTrasnactions:
+			uniqueTrasnactions.add(transaction['id'])
+			uniqueTrans.append(transaction)
+	print "Found: " + str(len(uniqueTrans))
+	return uniqueTrans
+
+def transactionGraph(addressList, firstDate, lastDate):
+	graph = []
+	uniqueTrasnactions = set()
+	for address in addressList:
+		graph.append(transactionsByDate(address, firstDate, lastDate, uniqueTrasnactions))
+	return graph
 
 
 firstDate = datetime(2017, 3, 4, 1, 1, 1)
-lastDate = datetime(2017, 3, 5, 1, 1, 1)  
-address = "1BoatSLRHtKNngkdXEeobR76b53LETtpyT"
-transactionsByDate(address, firstDate, lastDate)
+lastDate = datetime(2017, 3, 5, 1, 1, 1) 
+addresses = ["1BoatSLRHtKNngkdXEeobR76b53LETtpyT","1BoatSLRHtKNngkdXEeobR76b53LETtpyT"]
+transactionGraph = transactionGraph(addresses, firstDate, lastDate)
+print transactionGraph
+
