@@ -5,6 +5,9 @@ import csv
 import argparse
 from datetime import datetime
 
+
+uniqueNodes = set()
+
 def getInputAddresses(inputFile):
 	inputFile="input.csv"
 	inputAddresses=[]
@@ -75,11 +78,11 @@ def processTransactions(allRawTrans, startTime, endTime):
 			txHash = trans['hash']
 			if(startTime<=transtime<=endTime):
 				transaction = {}
-				transaction['senders'] = senders
-				transaction['inValues'] = inValues
-				transaction['recievers'] = recievers
-				transaction['outValues'] = outValues
-				transaction['time'] = time
+				transaction['source'] = senders[0]
+				transaction['value'] = inValues[0]
+				transaction['target'] = recievers[0]
+				# transaction['outValues'] = outValues
+				# transaction['time'] = time
 				transaction['id'] = txHash
 				cleanedtrans.append(transaction)
 	return cleanedtrans
@@ -89,25 +92,39 @@ def transactionsByDate(address, firstDate, lastDate, uniqueTrasnactions):
 	allRawTrans = getAllTransactions(address, firstDate, lastDate)
 	cleanedTrans = processTransactions(allRawTrans, firstDate, lastDate)
 	uniqueTrans = []
-	
 	for transaction in cleanedTrans:
 		if transaction['id'] not in uniqueTrasnactions:
 			uniqueTrasnactions.add(transaction['id'])
 			uniqueTrans.append(transaction)
+			uniqueNodes.add(transaction['source'])
+			uniqueNodes.add(transaction['target'])
 	# print "Found: " + str(len(uniqueTrans))
 	return uniqueTrans
 
 def transactionGraph(addressList, firstDate, lastDate):
-	graph = {}
+	graph = []
 	uniqueTrasnactions = set()
 	for address in addressList:
-		graph[address] = transactionsByDate(address, firstDate, lastDate, uniqueTrasnactions)
+		graph.extend(transactionsByDate(address, firstDate, lastDate, uniqueTrasnactions))
 	return graph
 
+def formatTransactionNodes(transactionNodes):
+	nodes = []
+	for node in transactionNodes:
+		nodeDict = {}
+		nodeDict['id'] = node
+		nodeDict['group'] = 1
+		nodes.append(nodeDict)
+	return nodes
 
 firstDate = datetime(2017, 3, 4, 1, 1, 1)
 lastDate = datetime(2017, 3, 5, 1, 1, 1) 
 addresses = ["1BoatSLRHtKNngkdXEeobR76b53LETtpyT"]
-transactionGraph = transactionGraph(addresses, firstDate, lastDate)
+transactionLinks = transactionGraph(addresses, firstDate, lastDate)
+
+transactionGraph = {}
+transactionGraph['nodes'] =  formatTransactionNodes(uniqueNodes)
+transactionGraph['links'] = transactionLinks
+
 print json.dumps(transactionGraph)
 
