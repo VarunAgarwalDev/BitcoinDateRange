@@ -98,16 +98,16 @@ def transactionsByDate(address, firstDate, lastDate, uniqueTrasnactions):
 	return uniqueTrans
 
 def transactionGraph(addressList, firstDate, lastDate):
-	graph = []
+	graph = {}
 	uniqueTrasnactions = set()
 	for address in addressList:
-		graph.append(transactionsByDate(address, firstDate, lastDate, uniqueTrasnactions))
+		graph[address] = transactionsByDate(address, firstDate, lastDate, uniqueTrasnactions)
 	return graph
 
 
 firstDate = datetime(2017, 3, 4, 1, 1, 1)
 lastDate = datetime(2017, 3, 5, 1, 1, 1) 
-addresses = ["1BoatSLRHtKNngkdXEeobR76b53LETtpyT","1BoatSLRHtKNngkdXEeobR76b53LETtpyT"]
+addresses = ["1BoatSLRHtKNngkdXEeobR76b53LETtpyT"]
 transactionGraph = transactionGraph(addresses, firstDate, lastDate)
 print json.dumps(transactionGraph)
 
