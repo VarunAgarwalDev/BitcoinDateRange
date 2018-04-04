@@ -46,7 +46,7 @@ def getAllTransactions(address, startTime, endTime):
 		else:
 			return allRawTrans
 		pageNum = pageNum + 1
-		print("Searching Page #" + str(pageNum))
+		# print("Searching Page #" + str(pageNum))
 
 def processTransactions(allRawTrans, startTime, endTime):
 	#rawtrans = allRawTrans[0]['txs']
@@ -94,7 +94,7 @@ def transactionsByDate(address, firstDate, lastDate, uniqueTrasnactions):
 		if transaction['id'] not in uniqueTrasnactions:
 			uniqueTrasnactions.add(transaction['id'])
 			uniqueTrans.append(transaction)
-	print "Found: " + str(len(uniqueTrans))
+	# print "Found: " + str(len(uniqueTrans))
 	return uniqueTrans
 
 def transactionGraph(addressList, firstDate, lastDate):
@@ -109,5 +109,5 @@ firstDate = datetime(2017, 3, 4, 1, 1, 1)
 lastDate = datetime(2017, 3, 5, 1, 1, 1) 
 addresses = ["1BoatSLRHtKNngkdXEeobR76b53LETtpyT","1BoatSLRHtKNngkdXEeobR76b53LETtpyT"]
 transactionGraph = transactionGraph(addresses, firstDate, lastDate)
-print transactionGraph
+print json.dumps(transactionGraph)
 
